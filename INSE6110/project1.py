@@ -1,4 +1,4 @@
-import random
+""" import random
 import json
 
 
@@ -78,15 +78,6 @@ def private_key_generator(e, phi_N):  # we already know that gcd(pk)e, phi(N) = 
     return pow(e, -1, phi_N)  # return multiplicative inverse of e mod phi(N)
 
 
-def hex_convert_key(
-    n, e
-):  # convert integers to hexadecimals for N and e to generate key
-
-    key = (hex(n), hex(e))
-
-    return key
-
-
 def main():
     p = prime_generator()
     print(f"p = {p}")
@@ -100,8 +91,65 @@ def main():
     print(f"public key e = {e}")
     d = private_key_generator(e, phi_N)
     print(f"private key d = {d}")
-    my_public_key = hex_convert_key(n, e)
-    print(f"My public-key (N, e) is: {my_public_key}")
+    
+
+main()
+ """
+
+# Mikaeil Mayeli Feridani
+# N: 	2496728609
+# e: 	2423414819
+
+
+def message_slice(message):  # cut the original message in 3-byte chunks
+
+    cut_message = []  # initialize list
+
+    while message:  # while the are characters left
+        cut_message.append(message[:3])  # fill the list in chunks of 3
+        message = message[3:]  # remove 3 characters from the message
+
+    cut_message = tuple(cut_message)
+
+    return cut_message  # return the processed message
+
+
+def hex_convert(cut_message):  # convert the 3-byte chunks to hexadecimal string
+
+    hex_chunks = []  # initialize list
+    hex_chunks = [
+        "0x" + "".join(hex(ord(char))[2:] for char in string) for string in cut_message
+    ]  # add the hexadecimal outside the expression so it gets added only once, the join it in front of the converted element to complete the hex conversion.
+    # we start from the 3rd element in the ord list to avoid each 0x.
+
+    hex_chunks = tuple(hex_chunks)  # convert to tuple for protection
+
+    return hex_chunks
+
+
+def int_convert(hex_chunks):  # convert the 3-byte chunks to int string
+
+    int_chunks = [
+        int(val, 16) for val in hex_chunks
+    ]  # convert every hex value in the tuple to int
+
+    int_chunks = tuple(int_chunks)  # convert to tuple for protection
+
+    return int_chunks
+
+
+def main():
+
+    message = "Hello Mikaeil!!"
+
+    cut_message = message_slice(message)
+    hex_chunks = hex_convert(cut_message)
+    int_chunks = int_convert(hex_chunks)
+    print("")
+    print(f"The original message is: {message}\n")
+    print(f"In 3-byte chunks it is : {cut_message}\n")
+    print(f"Converted to hex it is : {hex_chunks}\n")
+    print(f"Converted to int it is : {int_chunks}\n")
 
 
 main()
