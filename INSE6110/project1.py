@@ -1,5 +1,5 @@
-""" import random
-import json
+"""
+import random
 
 
 # Randomly select two prime numbers, denoted by p and q (16 bits each)
@@ -78,7 +78,7 @@ def private_key_generator(e, phi_N):  # we already know that gcd(pk)e, phi(N) = 
     return pow(e, -1, phi_N)  # return multiplicative inverse of e mod phi(N)
 
 
-def main():
+def constant_generator():
     p = prime_generator()
     print(f"p = {p}")
     q = prime_generator()
@@ -91,23 +91,31 @@ def main():
     print(f"public key e = {e}")
     d = private_key_generator(e, phi_N)
     print(f"private key d = {d}")
-    
 
-main()
- """
+
+constant_generator()
+"""
+
+# Mine:
+# p = 49667
+# q = 50177
+# N = 2492141059
+# Phi(N) = 2492041216
+# public key e = 1538624097
+# private key d = 461365665
 
 # Mikaeil Mayeli Feridani
 # N: 	2496728609
 # e: 	2423414819
 
 
-def message_slice(message):  # cut the original message in 3-byte chunks
+def cut_to_chunks(message):  # cut the original message in 3-byte chunks
 
     cut_message = []  # initialize list
 
-    while message:  # while the are characters left
-        cut_message.append(message[:3])  # fill the list in chunks of 3
-        message = message[3:]  # remove 3 characters from the message
+    while message:  # while there are characters left
+        cut_message.append(message[:3])  # fill the list with 3-byte chunks
+        message = message[3:]  # remove 3 characters from the original message
 
     cut_message = tuple(cut_message)
 
@@ -120,7 +128,7 @@ def hex_convert(cut_message):  # convert the 3-byte chunks to hexadecimal string
     hex_chunks = [
         "0x" + "".join(hex(ord(char))[2:] for char in string) for string in cut_message
     ]  # add the hexadecimal outside the expression so it gets added only once, the join it in front of the converted element to complete the hex conversion.
-    # we start from the 3rd element in the ord list to avoid each 0x.
+    # we start from the 3rd element in the ord list to avoid each 0x then join it at the end to keep the proper hex format.
 
     hex_chunks = tuple(hex_chunks)  # convert to tuple for protection
 
@@ -131,7 +139,7 @@ def int_convert(hex_chunks):  # convert the 3-byte chunks to int string
 
     int_chunks = [
         int(val, 16) for val in hex_chunks
-    ]  # convert every hex value in the tuple to int
+    ]  # convert every hex element in the tuple to an int element
 
     int_chunks = tuple(int_chunks)  # convert to tuple for protection
 
@@ -142,7 +150,7 @@ def main():
 
     message = "Hello Mikaeil!!"
 
-    cut_message = message_slice(message)
+    cut_message = cut_to_chunks(message)
     hex_chunks = hex_convert(cut_message)
     int_chunks = int_convert(hex_chunks)
     print("")
