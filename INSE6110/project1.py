@@ -102,11 +102,12 @@ constant_generator()
 # N = 2492141059
 # Phi(N) = 2492041216
 # public key e = 1538624097
-# private key d = 461365665
+# private key
+d = 461365665
 
 # Mikaeil Mayeli Feridani
-# N: 	2496728609
-# e: 	2423414819
+N = 2496728609
+e = 2423414819
 
 
 def cut_to_chunks(message):  # cut the original message in 3-byte chunks
@@ -117,7 +118,7 @@ def cut_to_chunks(message):  # cut the original message in 3-byte chunks
         cut_message.append(message[:3])  # fill the list with 3-byte chunks
         message = message[3:]  # remove 3 characters from the original message
 
-    cut_message = tuple(cut_message)
+    cut_message = tuple(cut_message)  # convert to tuple for protection
 
     return cut_message  # return the processed message
 
@@ -146,10 +147,40 @@ def int_convert(hex_chunks):  # convert the 3-byte chunks to int string
     return int_chunks
 
 
+def square_and_multiply(base, exponent, modulus):
+
+    result = 1  # initialize the result
+    base = base % modulus  # optimization to avoid overflow
+
+    while exponent > 0:  # using exponent as counter
+        if exponent % 2 == 1:  # checking if the LSB is equal to 1
+            result = (
+                result * base
+            ) % modulus  # if it is, take the squared base and multiply it with base, then mod with N
+        exponent //= 2  # reduce the exponent
+        base = (
+            base * base
+        ) % modulus  # if the bit is -, square the base, then mod with N
+
+    return result
+
+
+def encr_decr(N, e_or_d, text):
+
+    converted_message = []
+
+    for i in range(len(text)):
+        converted_message.append(square_and_multiply(text[i], e_or_d, N))
+
+    converted_message = tuple(converted_message)  # convert to tuple for protection
+
+    return converted_message
+
+
 def main():
 
     message = "Hello Mikaeil!!"
-
+    # encrypted_message =
     cut_message = cut_to_chunks(message)
     hex_chunks = hex_convert(cut_message)
     int_chunks = int_convert(hex_chunks)
@@ -158,6 +189,10 @@ def main():
     print(f"In 3-byte chunks it is : {cut_message}\n")
     print(f"Converted to hex it is : {hex_chunks}\n")
     print(f"Converted to int it is : {int_chunks}\n")
+    encrypted_message = encr_decr(N, e, int_chunks)
+    print(f"The encrypted message is : {encrypted_message}\n")
+    decrypted_message = encr_decr(N, d, encrypted_message)
+    print(f"The decrypted message is : {decrypted_message}\n")
 
 
 main()
