@@ -99,15 +99,16 @@ constant_generator()
 # Mine:
 # p = 49667
 # q = 50177
-# N = 2492141059
+N = 2492141059
 # Phi(N) = 2492041216
-# public key e = 1538624097
+# public key
+e = 1538624097
 # private key
 d = 461365665
 
 # Mikaeil Mayeli Feridani
-N = 2496728609
-e = 2423414819
+# N = 2496728609
+# e = 2423414819
 
 
 def cut_to_chunks(message):  # cut the original message in 3-byte chunks
@@ -149,18 +150,18 @@ def int_convert(hex_chunks):  # convert the 3-byte chunks to int string
 
 def square_and_multiply(base, exponent, modulus):
 
-    result = 1  # initialize the result
-    base = base % modulus  # optimization to avoid overflow
+    result = 1  # initialize the result.
+    base = base % modulus  # optimization to avoid overflow.
 
-    while exponent > 0:  # using exponent as counter
-        if exponent % 2 == 1:  # checking if the LSB is equal to 1
+    while exponent > 0:  # using exponent as counter.
+        if exponent % 2 == 1:  # checking if the LSB is equal to 1.
             result = (
                 result * base
-            ) % modulus  # if it is, take the squared base and multiply it with base, then mod with N
-        exponent //= 2  # reduce the exponent
+            ) % modulus  # if it is, take the squared base and multiply it with base, then mod with N.
+        exponent //= 2  # reduce the exponent.
         base = (
             base * base
-        ) % modulus  # if the bit is -, square the base, then mod with N
+        ) % modulus  # if the bit is -, square the base, then mod with N.
 
     return result
 
@@ -170,17 +171,77 @@ def encr_decr(N, e_or_d, text):
     converted_message = []
 
     for i in range(len(text)):
-        converted_message.append(square_and_multiply(text[i], e_or_d, N))
+        converted_message.append(
+            square_and_multiply(text[i], e_or_d, N)
+        )  # fill the list with the encrypted/decrypted elements using square and multiply to handle big integers.
 
-    converted_message = tuple(converted_message)  # convert to tuple for protection
+    converted_message = tuple(converted_message)  # convert to tuple for protection.
 
     return converted_message
+
+
+def plain_text(decrypted_message):
+
+    plaintext = ""  # initialize plaintext
+
+    for elem in decrypted_message:
+        message_to_bytes = elem.to_bytes(
+            (elem.bit_length() + 7) // 8, "big"
+        )  # count neccessary bits for conversion and add 7 to round up for correct utf-8 representation
+        # divide by 8 to properly convert to bytes, starting from MSB
+        plaintext += message_to_bytes.decode(
+            "utf-8", "ignore"
+        )  # convert bytes to string and join them all together to form the plaintext
+
+    return plaintext
+
+
+def string_to_chunks(
+    string, chunk_size
+):  # split signature name to chunks in order to keep it smaller than N
+    return [string[i : i + chunk_size] for i in range(0, len(string), chunk_size)]
+
+
+def sign_and_check(N, d_or_e, m_or_sig):
+    if isinstance(m_or_sig, str):
+        # when the input is a string, divide it into chunks
+        chunks = string_to_chunks(
+            m_or_sig, 3
+        )  # and assuming each chunk is 3 characters long
+        signatures = tuple(
+            square_and_multiply(
+                int.from_bytes(chunk.encode("utf-8"), byteorder="big"), d_or_e, N
+            )
+            for chunk in chunks
+        )  # sign each chunk separately
+        return signatures
+    else:  # signature verification
+        verified_signature = (
+            square_and_multiply(sig_chunk, d_or_e, N) for sig_chunk in m_or_sig
+        )  # for each each chunk separately
+        return verified_signature
+
+
+def overall_verification(name, verify):
+    verify_final = False  # initialization
+    # combine all the chunks back together and verify the full signature
+    verify_final = all(
+        chunk_element == chunk_verification
+        for chunk_verification, chunk_element in zip(
+            verify,
+            (
+                int.from_bytes(chunk.encode("utf-8"), byteorder="big")
+                for chunk in string_to_chunks(name, 3)
+            ),  # using zip to compare the verification result for each chunk with its corresponding original chunk
+        )
+    )
+    return verify_final
 
 
 def main():
 
     message = "Hello Mikaeil!!"
-    # encrypted_message =
+    # mikaeils_message = HERE GOES MIKAEIL'S LIST
     cut_message = cut_to_chunks(message)
     hex_chunks = hex_convert(cut_message)
     int_chunks = int_convert(hex_chunks)
@@ -193,6 +254,16 @@ def main():
     print(f"The encrypted message is : {encrypted_message}\n")
     decrypted_message = encr_decr(N, d, encrypted_message)
     print(f"The decrypted message is : {decrypted_message}\n")
+    plaintext = plain_text(decrypted_message)
+    print(f"The original message is : {plaintext}\n")
+    name = "Dimitrios Kafritsas"
+    sign = sign_and_check(N, d, name)
+    print(f"The signature is : {sign}\n")
+    verify = sign_and_check(N, e, sign)
+    print("Signature Verification\n===========================")
+    print(
+        f"{name}: {overall_verification(name, verify)}\n===========================\n"
+    )
 
 
 main()
