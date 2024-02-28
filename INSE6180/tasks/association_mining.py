@@ -15,13 +15,19 @@ def association_mining_func(dataset_path):
         lambda x: pd.cut(x, bins=2, labels=["low", "high"])
     )
 
+    pd.set_option("future.no_silent_downcasting", True)
     # Convert binary columns to 0 and 1
-    data_binary.replace({"low": 0, "high": 1}, inplace=True)
+    # Assuming data_binary is a categorical Series
+    data_binary = data_binary.replace({"low": 0, "high": 1}).astype(int)
 
     # Perform frequent itemset mining
-    frequent_itemsets = apriori(data_binary, min_support=0.1, use_colnames=True)
+    frequent_itemsets = apriori(data_binary, min_support=0.2, use_colnames=True)
 
     # Generate association rules
     rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+
+    # Convert frozenset to string
+    rules["antecedents"] = rules["antecedents"].apply(lambda x: ", ".join(x))
+    rules["consequents"] = rules["consequents"].apply(lambda x: ", ".join(x))
 
     return rules
