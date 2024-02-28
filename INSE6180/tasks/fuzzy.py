@@ -1,65 +1,37 @@
 import pandas as pd
+import numpy as np
 
 
-def fuzzy_mining_func(dataset_path):
-    df = pd.read_csv(dataset_path)
-    data = df.copy()
+def fuzzy_mining_func(data_file_path, alpha1, alpha2):
+    # Step 1: Load the data
+    data = pd.read_csv(data_file_path)
 
-    # Define Fuzzy Membership Functions for hiding level
-    def membership_function(x):
-        if x >= 70:
-            return "very high"
-        elif x >= 38:
-            return "high"
-        elif x >= 17:
-            return "medium"
-        else:
-            return "low"
+    # Step 2: Compute Nj for each item
+    Nj_dict = data["antecedents"].value_counts().to_dict()
+    data["Nj"] = data["antecedents"].map(Nj_dict)
 
-    # Calculate Membership Scores for Confidence Values
-    def calculate_membership_scores(data):
-        membership_scores = []
-        for _, row in data.iterrows():
-            score = membership_function(row["confidence"])
-            membership_scores.append(score)
-        return membership_scores
+    # Step 3: Compute IS for each row
+    data["IS"] = (data["Nj"] * data["support"]) / data["antecedent support"]
 
-    # Determine Hiding Degree Based on Confidence Values
-    def determine_hiding_degree(membership_scores):
-        hiding_degree = []
-        for score in membership_scores:
-            if score == "very high":
-                hiding_degree.append("hide")
-            elif score == "high":
-                hiding_degree.append("hide")
-            elif score == "medium":
-                hiding_degree.append("partial_hide")
-            else:
-                hiding_degree.append("no_hide")
-        return hiding_degree
+    # Step 4: Compute DOC for each row
+    data["DOC"] = np.sqrt((data["confidence"] - data["consequent support"]) ** 2)
 
-    # Hide Association Rules Based on Hiding Degree
-    def hide_association_rules(data, hiding_degree):
-        hidden_data = data.copy()
-        for idx, degree in enumerate(hiding_degree):
-            if degree == "hide":
-                hidden_data.at[idx, "antecedents"] = "***HIDDEN***"
-                hidden_data.at[idx, "consequents"] = "***HIDDEN***"
-            elif degree == "partial_hide":
-                # Adjust hiding degree for medium scores (you can customize this based on your needs)
-                hidden_data.at[idx, "antecedents"] = "***PARTIAL HIDDEN***"
-                hidden_data.at[idx, "consequents"] = "***PARTIAL HIDDEN***"
-        return hidden_data
+    # Step 5: Compute BIV for each row
+    data["BIV"] = alpha1 * data["IS"] + alpha2 * data["DOC"]
 
-    # Step 1: Calculate Membership Scores for Confidence Values
-    membership_scores = calculate_membership_scores(data)
+    # Step 6: Find the row with the minimum BIV
+    best_row_index = data["BIV"].idxmin()
 
-    # Step 2: Determine Hiding Degree Based on Confidence Values
-    hiding_degree = determine_hiding_degree(membership_scores)
+    # Step 7: Hide the data based on the best row
+    best_item = data.loc[best_row_index]
+    hidden_data = data[data.index != best_row_index]
 
-    # Step 3: Hide Association Rules Based on Hiding Degree
-    hidden_data = hide_association_rules(data, hiding_degree)
-
-    print(hidden_data)
+    # Step 8: Apply fuzzy logic to hide the best item
+    hidden_data["antecedents"] = hidden_data["antecedents"].apply(
+        lambda x: "Hidden" if x == best_item["antecedents"] else x
+    )
+    hidden_data["consequents"] = hidden_data["consequents"].apply(
+        lambda x: "Hidden" if x == best_item["consequents"] else x
+    )
 
     return hidden_data
