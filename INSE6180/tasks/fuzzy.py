@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 
-def fuzzy_mining_func(data_file_path, alpha1, alpha2):
+def fuzzy_mining_func(data_file_path, alpha1=0.5, alpha2=0.5):
     # Step 1: Load the data
     data = pd.read_csv(data_file_path)
 
