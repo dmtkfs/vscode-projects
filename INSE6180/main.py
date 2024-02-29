@@ -38,8 +38,6 @@ def main():
         dataset_path, min_support=0.1, noise_level=0.1
     )
 
-    print(frequent_patterns_with_noise)
-
     # save the noise mining results table
     frequent_patterns_with_noise.to_csv("outputs/noise_itemsets.csv", index=True)
 
