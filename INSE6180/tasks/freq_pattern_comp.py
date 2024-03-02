@@ -1,7 +1,9 @@
 import pandas as pd
 
 
-def compare_frequent_mining_results(original_itemsets_file, anonymized_itemsets_file):
+def compare_frequent_mining_results(
+    original_itemsets_file, anonymized_itemsets_file, sensitive_attributes
+):
     """
     Compare frequent itemsets data mining results between the original and anonymized datasets.
 
@@ -13,28 +15,11 @@ def compare_frequent_mining_results(original_itemsets_file, anonymized_itemsets_
     - None
     """
 
-    # List of sensitive attributes
-    sensitive_itemsets = [
-        "age",
-        "Medu",
-        "Fedu",
-        "traveltime",
-        "studytime",
-        "failures",
-        "famrel",
-        "freetime",
-        "goout",
-        "Dalc",
-        "Walc",
-        "health",
-        "absences",
-    ]
-
     # Function to calculate itemset disclosure risk
     def calculate_itemset_disclosure_risk(itemsets_df):
         disclosure_risk = sum(
             itemsets_df["itemsets"].apply(
-                lambda x: any(item in x for item in sensitive_itemsets)
+                lambda x: any(item in x for item in sensitive_attributes)
             )
         )
         disclosure_risk_percentage = (disclosure_risk / len(itemsets_df)) * 100
@@ -79,12 +64,12 @@ def compare_frequent_mining_results(original_itemsets_file, anonymized_itemsets_
     # Calculate the percentage reduction in sensitive itemsets
     original_sensitive_itemsets_count = original_itemsets[
         original_itemsets["itemsets"].apply(
-            lambda x: any(item in x for item in sensitive_itemsets)
+            lambda x: any(item in x for item in sensitive_attributes)
         )
     ].shape[0]
     anonymized_sensitive_itemsets_count = anonymized_itemsets[
         anonymized_itemsets["itemsets"].apply(
-            lambda x: any(item in x for item in sensitive_itemsets)
+            lambda x: any(item in x for item in sensitive_attributes)
         )
     ].shape[0]
     reduction_sensitive_itemsets_percentage = (

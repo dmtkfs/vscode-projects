@@ -9,6 +9,7 @@ from tasks.comparison import compare_results_accuracy_utility
 from tasks.asso_min_comp import compare_association_rules
 from tasks.fuzzy_comp import compare_fuzzy_mining_results
 from tasks.freq_pattern_comp import compare_frequent_mining_results
+from tasks.noise_comp import compare_noisy_mining_results
 import warnings
 
 
@@ -166,7 +167,21 @@ def main():
         "***************************\nFrequent Itemsets Data Mining Comparison Results\n***************************"
     )
     compare_frequent_mining_results(
-        r"outputs\frequent_itemsets.csv", r"outputs\frequent_itemsets_anonymized.csv"
+        r"outputs\frequent_itemsets.csv",
+        r"outputs\frequent_itemsets_anonymized.csv",
+        sensitive_attributes,
+    )
+
+    # Fourth comparison for frequent itemsets with added noise:
+    print(
+        "***************************\nFrequent Itemsets with Added Noise Data Mining Comparison Results\n***************************"
+    )
+
+    compare_noisy_mining_results(
+        r"outputs\noise_itemsets.csv",
+        r"outputs\noise_itemsets_anonymized.csv",
+        r"outputs\frequent_itemsets.csv",
+        r"outputs\frequent_itemsets_anonymized.csv",
     )
 
 

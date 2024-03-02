@@ -1,22 +1,5 @@
 import pandas as pd
 
-# List of sensitive attributes
-sensitive_attributes = [
-    "age",
-    "Medu",
-    "Fedu",
-    "traveltime",
-    "studytime",
-    "failures",
-    "famrel",
-    "freetime",
-    "goout",
-    "Dalc",
-    "Walc",
-    "health",
-    "absences",
-]
-
 
 def compare_fuzzy_mining_results(
     original_rules_file, anonymized_rules_file, sensitive_attributes
