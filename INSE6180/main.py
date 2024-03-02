@@ -6,7 +6,7 @@ from tasks.noise import frequent_pattern_mining_with_noise
 from tasks.ppdp import PrivacyPreservingDataPublisher
 from tasks.comparison import compare_privacy_preservation
 from tasks.comparison import compare_results_accuracy_utility
-from tasks.asso_min_comp import compare_data_privacy_and_mining
+from tasks.asso_min_comp import compare_association_rules
 from tasks.fuzzy_comp import compare_fuzzy_mining_results
 from tasks.freq_pattern_comp import compare_frequent_mining_results
 import warnings
@@ -20,6 +20,23 @@ def main():
     # dataset paths
     dataset_path = r"database\student-mat.csv"
     fuzzy_dataset_path = r"outputs\association_rules.csv"
+
+    # List of sensitive attributes
+    sensitive_attributes = [
+        "age",
+        "Medu",
+        "Fedu",
+        "traveltime",
+        "studytime",
+        "failures",
+        "famrel",
+        "freetime",
+        "goout",
+        "Dalc",
+        "Walc",
+        "health",
+        "absences",
+    ]
 
     # execute association rule mining
     rules = association_mining_func(dataset_path)
@@ -111,21 +128,21 @@ def main():
         "\n***************************\nAssociation Rules Data Mining Comparison Results\n***************************"
     )
 
-    compare_data_privacy_and_mining(
-        dataset_path,
-        anonymized_dataset_path,
+    compare_association_rules(
         fuzzy_dataset_path,
         r"outputs\association_rules_anonymized.csv",
+        sensitive_attributes,
     )
 
     # Second comparison for association rules with fuzzy logic data mining:
     print(
-        "***************************\nFuzzy Logic Association Rules Data Mining Comparison Results\n***************************"
+        "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\nFuzzy Logic Association Rules Data Mining Comparison Results\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
     )
 
     compare_fuzzy_mining_results(
         r"outputs\hidden_association_rules.csv",
         r"outputs\hidden_association_rules_anonymized.csv",
+        sensitive_attributes,
     )
 
     # Print ranges and their categories
