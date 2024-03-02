@@ -6,6 +6,9 @@ from tasks.noise import frequent_pattern_mining_with_noise
 from tasks.ppdp import PrivacyPreservingDataPublisher
 from tasks.comparison import compare_privacy_preservation
 from tasks.comparison import compare_results_accuracy_utility
+from tasks.asso_min_comp import compare_data_privacy_and_mining
+from tasks.fuzzy_comp import compare_fuzzy_mining_results
+from tasks.freq_pattern_comp import compare_frequent_mining_results
 import warnings
 
 
@@ -89,7 +92,7 @@ def main():
     frequent_patterns_with_noise.to_csv(
         "outputs/noise_itemsets_anonymized.csv", index=False
     )
-    # Example usage:
+    # Beta Comparison:
     privacy_percentage = compare_privacy_preservation(
         r"database\student-mat.csv", r"outputs\anonymized_data.csv"
     )
@@ -102,6 +105,51 @@ def main():
     )
     print(
         f"Results accuracy and utility percentage difference: {accuracy_percentage}%\n============================================================\n"
+    )
+    # First comparison for association rules data mining:
+    print(
+        "\n***************************\nAssociation Rules Data Mining Comparison Results\n***************************"
+    )
+
+    compare_data_privacy_and_mining(
+        dataset_path,
+        anonymized_dataset_path,
+        fuzzy_dataset_path,
+        r"outputs\association_rules_anonymized.csv",
+    )
+
+    # Second comparison for association rules with fuzzy logic data mining:
+    print(
+        "***************************\nFuzzy Logic Association Rules Data Mining Comparison Results\n***************************"
+    )
+
+    compare_fuzzy_mining_results(
+        r"outputs\hidden_association_rules.csv",
+        r"outputs\hidden_association_rules_anonymized.csv",
+    )
+
+    # Print ranges and their categories
+    print(f"@@@" * 30)
+    print("Ranges and Categories:")
+    print("Information Loss:")
+    print("Low: Information loss < 5%")
+    print("Moderate: 5% ≤ Information loss < 10%")
+    print("High: Information loss ≥ 10%\n")
+    print("Attribute Disclosure Risk:")
+    print("Low: Attribute disclosure risk ≤ 50%")
+    print("Moderate: 50% < Attribute disclosure risk < 80%")
+    print("High: Attribute disclosure risk ≥ 80%\n")
+    print("Number of Association Rules:")
+    print("Significant Impact: > 50% reduction in the number of association rules")
+    print(f"@@@" * 30)
+    print()
+
+    # Third comparison for frequent itemsets:
+    print(
+        "***************************\nFrequent Itemsets Data Mining Comparison Results\n***************************"
+    )
+    compare_frequent_mining_results(
+        r"outputs\frequent_itemsets.csv", r"outputs\frequent_itemsets_anonymized.csv"
     )
 
 
