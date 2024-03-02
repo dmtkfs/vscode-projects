@@ -146,22 +146,6 @@ def main():
         sensitive_attributes,
     )
 
-    # Print ranges and their categories
-    print(f"@@@" * 30)
-    print("Ranges and Categories:")
-    print("Information Loss:")
-    print("Low: Information loss < 5%")
-    print("Moderate: 5% ≤ Information loss < 10%")
-    print("High: Information loss ≥ 10%\n")
-    print("Attribute Disclosure Risk:")
-    print("Low: Attribute disclosure risk ≤ 50%")
-    print("Moderate: 50% < Attribute disclosure risk < 80%")
-    print("High: Attribute disclosure risk ≥ 80%\n")
-    print("Number of Association Rules:")
-    print("Significant Impact: > 50% reduction in the number of association rules")
-    print(f"@@@" * 30)
-    print()
-
     # Third comparison for frequent itemsets:
     print(
         "***************************\nFrequent Itemsets Data Mining Comparison Results\n***************************"

@@ -88,8 +88,6 @@ def compare_noisy_mining_results(
     ) * 100
 
     # Print the comparison results
-    print("Frequent Itemsets with Added Noise Data Mining Comparison Results")
-    print("***************************")
     print("Privacy Preservation (Information Loss):")
     print(f"Original Itemset Disclosure Risk: {original_itemset_disclosure_risk:.2f}%")
     print(
