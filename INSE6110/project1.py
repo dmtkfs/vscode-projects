@@ -99,16 +99,16 @@ constant_generator()
 # Mine:
 # p = 49667
 # q = 50177
-N = 2492141059
+my_N = 2492141059
 # Phi(N) = 2492041216
 # public key
-e = 1538624097
+my_e = 1538624097
 # private key
 d = 461365665
 
 # Mikaeil Mayeli Feridani
-# N = 2496728609
-# e = 2423414819
+N = 2496728609
+e = 2423414819
 
 
 def cut_to_chunks(message):  # cut the original message in 3-byte chunks
@@ -190,7 +190,7 @@ def plain_text(decrypted_message):
         )  # count neccessary bits for conversion and add 7 to round up for correct utf-8 representation
         # divide by 8 to properly convert to bytes, starting from MSB
         plaintext += message_to_bytes.decode(
-            "utf-8", "ignore"
+            "ascii", "ignore"
         )  # convert bytes to string and join them all together to form the plaintext
 
     return plaintext
@@ -241,7 +241,14 @@ def overall_verification(name, verify):
 def main():
 
     message = "Hello Mikaeil!!"
-    # mikaeils_message = HERE GOES MIKAEIL'S LIST
+    mikaeils_message = (
+        552904839,
+        202559165,
+        832707405,
+        607764759,
+        38126602,
+        2231604777,
+    )
     cut_message = cut_to_chunks(message)
     hex_chunks = hex_convert(cut_message)
     int_chunks = int_convert(hex_chunks)
@@ -250,16 +257,16 @@ def main():
     print(f"In 3-byte chunks it is : {cut_message}\n")
     print(f"Converted to hex it is : {hex_chunks}\n")
     print(f"Converted to int it is : {int_chunks}\n")
-    encrypted_message = encr_decr(N, e, int_chunks)
+    encrypted_message = encr_decr(my_N, my_e, int_chunks)
     print(f"The encrypted message is : {encrypted_message}\n")
-    decrypted_message = encr_decr(N, d, encrypted_message)
+    decrypted_message = encr_decr(my_N, d, mikaeils_message)
     print(f"The decrypted message is : {decrypted_message}\n")
     plaintext = plain_text(decrypted_message)
     print(f"The original message is : {plaintext}\n")
     name = "Dimitrios Kafritsas"
-    sign = sign_and_check(N, d, name)
+    sign = sign_and_check(my_N, d, name)
     print(f"The signature is : {sign}\n")
-    verify = sign_and_check(N, e, sign)
+    verify = sign_and_check(my_N, my_e, sign)
     print("Signature Verification\n===========================")
     print(
         f"{name}: {overall_verification(name, verify)}\n===========================\n"
