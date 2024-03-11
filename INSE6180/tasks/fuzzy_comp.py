@@ -8,48 +8,63 @@ def compare_fuzzy_mining_results(
     original_rules = pd.read_csv(original_rules_file)
     anonymized_rules = pd.read_csv(anonymized_rules_file)
 
-    # Calculate the number of association rules in each dataset
-    original_rule_count = original_rules.shape[0]
-    anonymized_rule_count = anonymized_rules.shape[0]
+    # Enhance Common Rules Calculation
+    common_rules = pd.merge(
+        original_rules,
+        anonymized_rules,
+        on=["antecedents", "consequents"],
+        how="inner",
+        suffixes=("_orig", "_anon"),
+    )
+    common_rule_count = len(common_rules)
 
-    # Calculate the percentage reduction in the number of association rules
+    # Revised calculations for the number of rules and reduction percentage
+    original_rule_count = len(original_rules)
+    anonymized_rule_count = len(anonymized_rules)
     reduction_percentage = (
         (original_rule_count - anonymized_rule_count) / original_rule_count
     ) * 100
 
-    # Calculate privacy preservation (Information Loss)
+    # Enhanced Attribute Disclosure Risk Calculation
+    original_sensitive_rules = original_rules[
+        original_rules["antecedents"].str.contains(
+            "|".join(sensitive_attributes), na=False
+        )
+    ]
+    anonymized_sensitive_rules = anonymized_rules[
+        anonymized_rules["antecedents"].str.contains(
+            "|".join(sensitive_attributes), na=False
+        )
+    ]
+    attribute_disclosure_risk = (
+        (len(anonymized_sensitive_rules) / len(original_sensitive_rules)) * 100
+        if len(original_sensitive_rules) > 0
+        else 0
+    )
+
+    # Information Loss Calculation based on BIV
     information_loss_original = original_rules["BIV"].mean()
     information_loss_anonymized = anonymized_rules["BIV"].mean()
     information_loss_percentage = (
-        (information_loss_original - information_loss_anonymized)
-        / information_loss_original
-    ) * 100
-
-    # Check if sensitive attributes are still disclosed in anonymized data
-    original_sensitive_rules = original_rules[
-        original_rules["antecedents"].str.contains("|".join(sensitive_attributes))
-    ]
-    anonymized_sensitive_rules = anonymized_rules[
-        anonymized_rules["antecedents"].str.contains("|".join(sensitive_attributes))
-    ]
-    attribute_disclosure_risk = (
-        len(anonymized_sensitive_rules) / len(original_sensitive_rules)
-    ) * 100
-
-    # Calculate the number of common association rules
-    common_rule_count = len(
-        original_rules[
-            original_rules["antecedents"].isin(anonymized_rules["antecedents"])
-        ]
+        (
+            (information_loss_original - information_loss_anonymized)
+            / information_loss_original
+        )
+        * 100
+        if information_loss_original > 0
+        else 0
     )
 
-    # Calculate the percentage reduction in the number of sensitive attributes
-    original_unique_antecedents = original_rules["antecedents"].nunique()
-    anonymized_unique_antecedents = anonymized_rules["antecedents"].nunique()
+    # Revised percentage reduction in sensitive attributes calculation
     reduction_sensitive_attributes = (
-        (original_unique_antecedents - anonymized_unique_antecedents)
-        / original_unique_antecedents
-    ) * 100
+        (
+            (len(original_sensitive_rules) - len(anonymized_sensitive_rules))
+            / len(original_sensitive_rules)
+        )
+        * 100
+        if len(original_sensitive_rules) > 0
+        else 0
+    )
 
     # Print the comparison results
     print(
@@ -66,3 +81,6 @@ def compare_fuzzy_mining_results(
         f"Percentage Reduction in Sensitive Attributes: {reduction_sensitive_attributes:.2f}%"
     )
     print()
+
+
+# Note: Before running the function, ensure the correct paths to your CSV files and a list of sensitive attributes.

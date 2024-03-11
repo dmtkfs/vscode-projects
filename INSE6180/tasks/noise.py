@@ -24,7 +24,7 @@ def frequent_pattern_mining_with_noise(dataset_path, min_support=0.1, noise_leve
     df_numeric = df_encoded[numeric_columns]
 
     # Add noise to the dataset
-    noise_data = add_noise(df_numeric, noise_level)
+    noise_data = add_targeted_noise(df_numeric, noise_level)
 
     # Perform frequent pattern mining
     noise_itemsets = apriori(
@@ -39,27 +39,25 @@ def frequent_pattern_mining_with_noise(dataset_path, min_support=0.1, noise_leve
     return noise_itemsets
 
 
-def add_noise(df, noise_level=0.1):
+def add_targeted_noise(df, noise_level=0.1, sensitive_columns=[]):
     """
-    Add noise to the dataset by randomly generating noise transactions.
+    Add noise to sensitive itemsets in the dataset selectively.
 
     Parameters:
-        df (DataFrame): The original dataset.
-        noise_level (float): The percentage of noise transactions to add.
+        df (DataFrame): Original dataset.
+        noise_level (float): The percentage of noise transactions to add to sensitive itemsets.
+        sensitive_columns (list): Columns considered sensitive.
 
     Returns:
-        DataFrame: The dataset with added noise transactions.
+        DataFrame: Dataset with added noise to sensitive itemsets.
     """
-    # Get the binary columns
-    binary_columns = [col for col in df.columns if df[col].isin([0, 1]).all()]
-
-    # Add noise only to binary columns
     noise_data = df.copy()
-    for col in binary_columns:
-        num_rows = len(df)
-        num_noise_rows = int(num_rows * noise_level)
-        noise_values = np.random.randint(0, 2, size=(num_noise_rows,))
-        noise_df = pd.DataFrame({col: noise_values})
-        noise_data = pd.concat([noise_data, noise_df], axis=1)
+    for col in sensitive_columns:
+        if col in df.columns:
+            num_rows = len(df)
+            num_noise_rows = int(num_rows * noise_level)
+            noise_indices = np.random.choice(df.index, num_noise_rows, replace=False)
+            noise_values = np.random.choice([0, 1], size=(num_noise_rows,))
+            noise_data.loc[noise_indices, col] = noise_values
 
     return noise_data

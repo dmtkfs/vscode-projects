@@ -166,6 +166,7 @@ def main():
         r"outputs\noise_itemsets_anonymized.csv",
         r"outputs\frequent_itemsets.csv",
         r"outputs\frequent_itemsets_anonymized.csv",
+        sensitive_attributes,
     )
 
 
