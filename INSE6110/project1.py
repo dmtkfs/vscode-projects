@@ -203,22 +203,32 @@ def string_to_chunks(
 
 
 def sign_and_check(N, d_or_e, m_or_sig):
+
     if isinstance(m_or_sig, str):
         # when the input is a string, divide it into chunks
         chunks = string_to_chunks(
             m_or_sig, 3
         )  # and assuming each chunk is 3 characters long
+
+        chunks_int = []  # initialize
+        for chunk in chunks:
+            chunks_int.append(
+                int.from_bytes(chunk.encode("utf-8"), byteorder="big")
+            )  # convert str chunks to int chunks
+        chunks_int = tuple(chunks_int)  # conversion to tuple
+        print(f"Converted to be signed it is: {chunks_int}\n")
+
         signatures = tuple(
-            square_and_multiply(
-                int.from_bytes(chunk.encode("utf-8"), byteorder="big"), d_or_e, N
-            )
-            for chunk in chunks
+            square_and_multiply(chunk, d_or_e, N) for chunk in chunks_int
         )  # sign each chunk separately
+
         return signatures
-    else:  # signature verification
-        verified_signature = (
+
+    else:  # signature verification when input is an integer
+        verified_signature = tuple(
             square_and_multiply(sig_chunk, d_or_e, N) for sig_chunk in m_or_sig
         )  # for each each chunk separately
+
         return verified_signature
 
 
@@ -241,6 +251,7 @@ def overall_verification(name, verify):
 def main():
 
     message = "Hello Mikaeil!!"
+    name = "Dimitrios Kafritsas"
     mikaeils_message = (
         552904839,
         202559165,
@@ -253,24 +264,25 @@ def main():
     hex_chunks = hex_convert(cut_message)
     int_chunks = int_convert(hex_chunks)
     print("")
-    print(f"The original message is: {message}\n")
+    print("\nPart 1\n==================================================\n")
+    print(f"My original message is: {message}\n")
     print(f"In 3-byte chunks it is : {cut_message}\n")
     print(f"Converted to hex it is : {hex_chunks}\n")
     print(f"Converted to int it is : {int_chunks}\n")
     encrypted_message = encr_decr(my_N, my_e, int_chunks)
-    print(f"The encrypted message is : {encrypted_message}\n")
+    print(f"My encrypted message is : {encrypted_message}\n")
     decrypted_message = encr_decr(my_N, d, mikaeils_message)
-    print(f"The decrypted message is : {decrypted_message}\n")
+    print(f"The decrypted partner message is : {decrypted_message}\n")
     plaintext = plain_text(decrypted_message)
-    print(f"The original message is : {plaintext}\n")
-    name = "Dimitrios Kafritsas"
+    print(f"The original partner message is : {plaintext}\n")
+    print("\nPart 2\n==================================================\n")
+    print(f"My message to sign is : {name}\n")
     sign = sign_and_check(my_N, d, name)
-    print(f"The signature is : {sign}\n")
+    print(f"My signature is : {sign}\n")
     verify = sign_and_check(my_N, my_e, sign)
-    print("Signature Verification\n===========================")
-    print(
-        f"{name}: {overall_verification(name, verify)}\n===========================\n"
-    )
+    print(f"The verified signature is : {verify}\n")
+    print("Signature Verification\n=========================")
+    print(f"{name}: {overall_verification(name, verify)}\n=========================\n")
 
 
 main()
