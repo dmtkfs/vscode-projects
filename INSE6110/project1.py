@@ -260,6 +260,17 @@ def main():
         38126602,
         2231604777,
     )
+    signed_partner_text = (
+        1483161003,
+        2494912581,
+        678708095,
+        1785449489,
+        498998315,
+        1844286645,
+        42096706,
+        1071285895,
+    )
+    partner_name = "Mikaeil Mayeli Feridani"
     cut_message = cut_to_chunks(message)
     hex_chunks = hex_convert(cut_message)
     int_chunks = int_convert(hex_chunks)
@@ -279,10 +290,12 @@ def main():
     print(f"My message to sign is : {name}\n")
     sign = sign_and_check(my_N, d, name)
     print(f"My signature is : {sign}\n")
-    verify = sign_and_check(my_N, my_e, sign)
-    print(f"The verified signature is : {verify}\n")
-    print("Signature Verification\n=========================")
-    print(f"{name}: {overall_verification(name, verify)}\n=========================\n")
+    verify = sign_and_check(N, e, signed_partner_text)
+    print(f"The verified partner signature is : {verify}\n")
+    print("Partner's Signature Verification\n================================")
+    print(
+        f"{partner_name}: {overall_verification(partner_name, verify)}\n================================\n"
+    )
 
 
 main()
