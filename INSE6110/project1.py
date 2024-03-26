@@ -81,6 +81,7 @@ def private_key_generator(e, phi_N):  # we already know that gcd(pk)e, phi(N) = 
     )  # return multiplicative inverse of e mod phi(N), which is our d
 
 
+# works with both new and chosen primes p and q, to facilitate demonstration
 def constant_generator(p=None, q=None):
     if not p and not q:
         p = prime_generator()
@@ -116,14 +117,14 @@ print("\nPart 1 - Computation\n=================================================
 constant_generator()
 
 print(" General Computation Completed. Waiting...\n")
-time.sleep(10)
+time.sleep(15)
 
 constant_generator(p=49667, q=50177)
 print(" Computation Completed for p = 49667 and q = 50177.")
 print(" We have already chosen e = 1538624097 and d = 461365665. Waiting...\n")
-time.sleep(5)
+time.sleep(15)
 
-# Mine:
+# My constants (saved):
 # p = 49667
 # q = 50177
 my_N = 2492141059
@@ -317,13 +318,13 @@ def main():
     encrypted_message = encr_decr(N, e, int_chunks)
     print(f"My encrypted message is : {encrypted_message}\n")
     print(" Encryption Completed. Waiting...\n")
-    time.sleep(5)
+    time.sleep(15)
     decrypted_message = encr_decr(my_N, d, mikaeils_message)
     print(f"The decrypted partner message is : {decrypted_message}\n")
     plaintext = plain_text(decrypted_message)
     print(f"The original partner message is : {plaintext}\n")
     print(" Decryption Completed. Waiting...\n")
-    time.sleep(5)
+    time.sleep(15)
     print(
         "\nPart 2 - Signature & Verification\n==================================================\n"
     )
@@ -332,7 +333,7 @@ def main():
     print(f"My signature is : {sign}\n")
     verify = sign_and_check(N, e, signed_partner_text)
     print(" Message Signed. Waiting...\n")
-    time.sleep(5)
+    time.sleep(15)
     print(f"The verified partner signature is : {verify}\n")
     print("Partner's Signature Verification\n================================")
     print(
