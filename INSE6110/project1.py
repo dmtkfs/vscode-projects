@@ -2,7 +2,6 @@
 import random
 
 
-# Randomly select two prime numbers, denoted by p and q (16 bits each)
 # check if the number is prime
 def is_prime(num):
 
@@ -18,7 +17,7 @@ def is_prime(num):
             return True  # prime
 
 
-# generate number
+# generate prime number for p and q
 def prime_generator():
 
     number = random.randint(0, 65535)  # 16bits = 65535 including 0
@@ -75,7 +74,7 @@ def public_key_generator(phi_N):
 
 
 def private_key_generator(e, phi_N):  # we already know that gcd(pk)e, phi(N) = 1
-    return pow(e, -1, phi_N)  # return multiplicative inverse of e mod phi(N)
+    return pow(e, -1, phi_N)  # return multiplicative inverse of e mod phi(N), which is our d
 
 
 def constant_generator():
