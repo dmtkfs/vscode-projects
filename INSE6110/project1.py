@@ -1,5 +1,5 @@
-"""
 import random
+import time
 
 
 # check if the number is prime
@@ -8,12 +8,14 @@ def is_prime(num):
     while True:  # check for primality
 
         if num == 0 or num == 1:  # known
+            print(f"\n{num} is not prime.")
             return False  # not prime
         else:
             for i in range(2, num):  # check against all numbers including itself
                 if num % i == 0:
+                    print(f"\n{num} is not prime.")
                     return False  # not prime
-
+            print(f"\n{num} is prime.\n")
             return True  # prime
 
 
@@ -74,26 +76,52 @@ def public_key_generator(phi_N):
 
 
 def private_key_generator(e, phi_N):  # we already know that gcd(pk)e, phi(N) = 1
-    return pow(e, -1, phi_N)  # return multiplicative inverse of e mod phi(N), which is our d
+    return pow(
+        e, -1, phi_N
+    )  # return multiplicative inverse of e mod phi(N), which is our d
 
 
-def constant_generator():
-    p = prime_generator()
-    print(f"p = {p}")
-    q = prime_generator()
-    print(f"q = {q}")
-    n = compute_n(p, q)
-    print(f"N = {n}")
-    phi_N = compute_phi_n(p, q)
-    print(f"Phi(N) = {phi_N}")
-    e = public_key_generator(phi_N)
-    print(f"public key e = {e}")
-    d = private_key_generator(e, phi_N)
-    print(f"private key d = {d}")
+def constant_generator(p=None, q=None):
+    if not p and not q:
+        p = prime_generator()
+        print(f"p = {p}")
+        q = prime_generator()
+        print(f"q = {q}")
+        n = compute_n(p, q)
+        print(f"N = {n}")
+        phi_N = compute_phi_n(p, q)
+        print(f"Phi(N) = {phi_N}")
+        e = public_key_generator(phi_N)
+        print(f"public key e = {e}")
+        d = private_key_generator(e, phi_N)
+        print(f"private key d = {d}")
+        print("")
+    else:
+        is_prime(p)
+        print(f"p = {p}")
+        is_prime(q)
+        print(f"q = {q}")
+        n = compute_n(p, q)
+        print(f"N = {n}")
+        phi_N = compute_phi_n(p, q)
+        print(f"Phi(N) = {phi_N}")
+        e = public_key_generator(phi_N)
+        print(f"public key e = {e}")
+        d = private_key_generator(e, phi_N)
+        print(f"private key d = {d}")
+        print("")
 
-print("\nPart 1: Computation\n==================================================\n")
+
+print("\nPart 1 - Computation\n==================================================\n")
 constant_generator()
-"""
+
+print(" General Computation Completed. Waiting...\n")
+time.sleep(10)
+
+constant_generator(p=49667, q=50177)
+print(" Computation Completed for p = 49667 and q = 50177.")
+print(" We have already chosen e = 1538624097 and d = 461365665. Waiting...\n")
+time.sleep(5)
 
 # Mine:
 # p = 49667
@@ -279,32 +307,38 @@ def main():
     cut_message = cut_to_chunks(message)
     hex_chunks = hex_convert(cut_message)
     int_chunks = int_convert(hex_chunks)
-    print("")
     print(
-        "\nPart 1: Encryption/Decryption\n==================================================\n"
+        "\nPart 1 - Encryption/Decryption\n==================================================\n"
     )
     print(f"My original message is : {message}\n")
     print(f"In 3-byte chunks it is : {cut_message}\n")
     print(f"Converted to hex it is : {hex_chunks}\n")
     print(f"Converted to int it is : {int_chunks}\n")
-    encrypted_message = encr_decr(my_N, my_e, int_chunks)
+    encrypted_message = encr_decr(N, e, int_chunks)
     print(f"My encrypted message is : {encrypted_message}\n")
+    print(" Encryption Completed. Waiting...\n")
+    time.sleep(5)
     decrypted_message = encr_decr(my_N, d, mikaeils_message)
     print(f"The decrypted partner message is : {decrypted_message}\n")
     plaintext = plain_text(decrypted_message)
     print(f"The original partner message is : {plaintext}\n")
+    print(" Decryption Completed. Waiting...\n")
+    time.sleep(5)
     print(
-        "\nPart 2: Signature & Verification\n==================================================\n"
+        "\nPart 2 - Signature & Verification\n==================================================\n"
     )
     print(f"My message to sign is : {name}\n")
     sign = sign_and_check(my_N, d, name)
     print(f"My signature is : {sign}\n")
     verify = sign_and_check(N, e, signed_partner_text)
+    print(" Message Signed. Waiting...\n")
+    time.sleep(5)
     print(f"The verified partner signature is : {verify}\n")
     print("Partner's Signature Verification\n================================")
     print(
         f"{partner_name}: {overall_verification(partner_name, verify)}\n================================\n"
     )
+    print(" Signature Verified.\n")
 
 
 main()
