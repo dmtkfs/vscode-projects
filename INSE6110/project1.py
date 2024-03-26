@@ -318,13 +318,13 @@ def main():
     encrypted_message = encr_decr(N, e, int_chunks)
     print(f"My encrypted message is : {encrypted_message}\n")
     print(" Encryption Completed. Waiting...\n")
-    time.sleep(15)
+    time.sleep(10)
     decrypted_message = encr_decr(my_N, d, mikaeils_message)
     print(f"The decrypted partner message is : {decrypted_message}\n")
     plaintext = plain_text(decrypted_message)
     print(f"The original partner message is : {plaintext}\n")
     print(" Decryption Completed. Waiting...\n")
-    time.sleep(15)
+    time.sleep(10)
     print(
         "\nPart 2 - Signature & Verification\n==================================================\n"
     )
@@ -333,7 +333,7 @@ def main():
     print(f"My signature is : {sign}\n")
     verify = sign_and_check(N, e, signed_partner_text)
     print(" Message Signed. Waiting...\n")
-    time.sleep(15)
+    time.sleep(10)
     print(f"The verified partner signature is : {verify}\n")
     print("Partner's Signature Verification\n================================")
     print(
