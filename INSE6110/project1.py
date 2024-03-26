@@ -183,15 +183,20 @@ def encr_decr(N, e_or_d, text):
 def plain_text(decrypted_message):
 
     plaintext = ""  # initialize plaintext
+    message_chunks = []
 
     for elem in decrypted_message:
+
         message_to_bytes = elem.to_bytes(
             (elem.bit_length() + 7) // 8, "big"
         )  # count neccessary bits for conversion and add 7 to round up for correct utf-8 representation
         # divide by 8 to properly convert to bytes, starting from MSB
+        message_chunks.append(message_to_bytes.decode())
         plaintext += message_to_bytes.decode(
             "ascii", "ignore"
         )  # convert bytes to string and join them all together to form the plaintext
+
+    print(f"The partner message in chunks is: {message_chunks}\n")
 
     return plaintext
 
@@ -209,6 +214,7 @@ def sign_and_check(N, d_or_e, m_or_sig):
         chunks = string_to_chunks(
             m_or_sig, 3
         )  # and assuming each chunk is 3 characters long
+        print(f"My message to be signed in chunks is: {chunks}\n")
 
         chunks_int = []  # initialize
         for chunk in chunks:
