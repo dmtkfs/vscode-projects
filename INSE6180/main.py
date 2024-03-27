@@ -4,8 +4,6 @@ from tasks.fuzzy import fuzzy_mining_func
 from tasks.frequent_mining import frequent_mining_func
 from tasks.noise import frequent_pattern_mining_with_noise
 from tasks.ppdp import PrivacyPreservingDataPublisher
-from tasks.comparison import compare_privacy_preservation
-from tasks.comparison import compare_results_accuracy_utility
 from tasks.asso_min_comp import compare_association_rules
 from tasks.fuzzy_comp import compare_fuzzy_mining_results
 from tasks.freq_pattern_comp import compare_frequent_mining_results
@@ -110,23 +108,9 @@ def main():
     frequent_patterns_with_noise.to_csv(
         "outputs/noise_itemsets_anonymized.csv", index=False
     )
-    # Beta Comparison:
-    privacy_percentage = compare_privacy_preservation(
-        r"database\student-mat.csv", r"outputs\anonymized_data.csv"
-    )
-    print(
-        f"\n============================================================\nPrivacy preservation percentage: {privacy_percentage}%\n============================================================"
-    )
-
-    accuracy_percentage = compare_results_accuracy_utility(
-        r"outputs\association_rules.csv", r"outputs\association_rules_anonymized.csv"
-    )
-    print(
-        f"Results accuracy and utility percentage difference: {accuracy_percentage}%\n============================================================\n"
-    )
     # First comparison for association rules data mining:
     print(
-        "\n***************************\nAssociation Rules Data Mining Comparison Results\n***************************"
+        "***************************\nAssociation Rules Data Mining Comparison Results\n***************************"
     )
 
     compare_association_rules(
@@ -137,7 +121,7 @@ def main():
 
     # Second comparison for association rules with fuzzy logic data mining:
     print(
-        "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\nFuzzy Logic Association Rules Data Mining Comparison Results\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+        "***************************\nFuzzy Logic Association Rules Data Mining Comparison Results\n***************************"
     )
 
     compare_fuzzy_mining_results(

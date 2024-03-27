@@ -78,12 +78,11 @@ def compare_frequent_mining_results(
     ) * 100
 
     # Print the comparison results
-    print("Privacy Preservation (Information Loss):")
+    print(f"Privacy Preservation (Information Loss): {information_loss:.2f}%")
     print(f"Original Itemset Disclosure Risk: {original_itemset_disclosure_risk:.2f}%")
     print(
         f"Anonymized Itemset Disclosure Risk: {anonymized_itemset_disclosure_risk:.2f}%"
     )
-    print(f"Information Loss due to Anonymization: {information_loss:.2f}%")
     print(
         f"Percentage Reduction in Sensitive Itemsets: {reduction_sensitive_itemsets_percentage:.2f}%\n"
     )

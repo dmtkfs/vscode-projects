@@ -27,3 +27,4 @@ def k_anon_comp(original_dataset, anon_dataset):
 
     print("Original k-anonymity level:", original_k_anonymity)
     print("Anonymized k-anonymity level:", anonymized_k_anonymity)
+    print("YOLO")

@@ -74,13 +74,12 @@ def compare_fuzzy_mining_results(
     print(
         f"Percentage Reduction in the Number of Association Rules: {reduction_percentage:.2f}%"
     )
+    print(
+        f"Percentage Reduction in Sensitive Attributes: {reduction_sensitive_attributes:.2f}%\n"
+    )
+    print("Utility of Data Mining Results:")
     print(f"Number of Association Rules in Original Data: {original_rule_count}")
     print(f"Number of Association Rules in Anonymized Data: {anonymized_rule_count}")
     print(f"Number of Common Association Rules: {common_rule_count}")
-    print(
-        f"Percentage Reduction in Sensitive Attributes: {reduction_sensitive_attributes:.2f}%"
-    )
+
     print()
-
-
-# Note: Before running the function, ensure the correct paths to your CSV files and a list of sensitive attributes.

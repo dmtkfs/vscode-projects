@@ -61,29 +61,33 @@ def compare_association_rules(
             original_rules, anonymized_rules, sensitive_attributes
         )
     )
-    print(f"Attribute disclosure risk: {attribute_disclosure_risk:.2f}%")
-    print(f"Percentage reduction in sensitive attributes: {reduction_percentage:.2f}%")
-
+    print(f"Attribute Disclosure Risk: {attribute_disclosure_risk:.2f}%")
+    print(f"Percentage Reduction in Sensitive Attributes: {reduction_percentage:.2f}%")
     # Comparison of association rules
     original_rule_count = original_rules.shape[0]
     anonymized_rule_count = anonymized_rules.shape[0]
-    print(f"Number of association rules in original data: {original_rule_count}")
-    print(f"Number of association rules in anonymized data: {anonymized_rule_count}")
 
     # Find common rules between original and anonymized
     common_rules = pd.merge(
         original_rules, anonymized_rules, how="inner", on=["antecedents", "consequents"]
     )
     common_rule_count = common_rules.shape[0]
-
     # Calculate number of rules disappeared in anonymized data
     disappeared_rule_count = original_rule_count - common_rule_count
 
     # Calculate percentage reduction
     percentage_reduction = (disappeared_rule_count / original_rule_count) * 100
 
-    # Summary of differences
-    print(f"Number of common association rules: {common_rule_count}")
     print(
-        f"Number of association rules disappeared in anonymized data: {disappeared_rule_count} ({percentage_reduction:.2f}% reduction)\n"
+        f"Percentage Reduction in the Number of Association Rules: {disappeared_rule_count} ({percentage_reduction:.2f}% reduction)\n"
     )
+    print("Utility of Data Mining Results:")
+
+    original_rule_count = original_rules.shape[0]
+    anonymized_rule_count = anonymized_rules.shape[0]
+    print(f"Number of Association Rules in Original Data: {original_rule_count}")
+    print(f"Number of Association Rules in Anonymized Data: {anonymized_rule_count}")
+
+    # Summary of differences
+    print(f"Number of Common Association Rules: {common_rule_count}")
+    print()
