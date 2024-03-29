@@ -1,4 +1,3 @@
-import pandas as pd
 from tasks.association_mining import association_mining_func
 from tasks.fuzzy import fuzzy_mining_func
 from tasks.frequent_mining import frequent_mining_func
@@ -13,14 +12,14 @@ import warnings
 
 def main():
 
-    # Suppress DeprecationWarning
+    # Suppress warnings to ensure clean output
     warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-    # dataset paths
+    # Define paths to datasets
     dataset_path = r"database\student-mat.csv"
     fuzzy_dataset_path = r"outputs\association_rules.csv"
 
-    # List of sensitive attributes
+    # Define sensitive features  for our experiment
     sensitive_attributes = [
         "age",
         "Medu",
@@ -37,78 +36,59 @@ def main():
         "absences",
     ]
 
-    # execute association rule mining
+    # Perform association rule mining and save results
     rules = association_mining_func(dataset_path)
-
-    # save association rules results table
     rules.to_csv("outputs/association_rules.csv", index=False)
 
-    # execute fuzzy mining
+    # Perform fuzzy association rule mining and save results
     fuzzy_data = fuzzy_mining_func(fuzzy_dataset_path)
-
-    # save the fuzzy mining results table
     fuzzy_data.to_csv("outputs/hidden_association_rules.csv", index=False)
 
-    # execute frequent pattern mining
+    # Perform frequent pattern mining and save results
     frequent_itemsets = frequent_mining_func(dataset_path)
-
-    # save the frequent pattern mining results table
     frequent_itemsets.to_csv("outputs/frequent_itemsets.csv", index=False)
 
-    # execute frequent pattern mining with noise
+    # Perform frequent pattern mining with added noise and save results
     frequent_patterns_with_noise = frequent_pattern_mining_with_noise(
         dataset_path, min_support=0.1, noise_level=0.1
     )
-
-    # save the noise mining results table
     frequent_patterns_with_noise.to_csv("outputs/noise_itemsets.csv", index=False)
 
-    # Initialize PPDP
+    # Initialize and apply anonymization pre-processing using the class PPDP
     ppdp = PrivacyPreservingDataPublisher(dataset_path)
 
-    # Apply anonymization operations
-    ppdp.k_anonymize(k=2)
-    ppdp.suppress(["age"])  # Example: Suppressing identifier
-    # Permutation and suppression operations can also be applied if needed
-    ppdp.permutation("paid")
-    ppdp.suppress(["guardian"])
+    # Apply anonymization methods
+    ppdp.k_anonymize(k=2)  # Apply k-anonymity
+    ppdp.suppress(["age"])  # Suppress 'age' column for privacy
+    ppdp.permutation("paid")  # Shuffle 'paid' column values
+    ppdp.suppress(["guardian"])  # Suppress 'guardian' column
+    ppdp.publish()  # Generate the anonymized data
 
-    # Publish the anonymized data
-    ppdp.publish()
-
-    # rerun with anonymized data now
-    # dataset paths
+    # Repeat mining techniques on the anonymized dataset
     anonymized_dataset_path = r"outputs\anonymized_data.csv"
     anonymized_fuzzy_dataset_path = r"outputs\association_rules_anonymized.csv"
 
-    # execute association rule mining
+    # Perform association rule mining on anonymized data and save results
     rules = association_mining_func(anonymized_dataset_path)
-
-    # save association rules results table
     rules.to_csv("outputs/association_rules_anonymized.csv", index=False)
 
-    # execute fuzzy mining
+    # Perform fuzzy association rule mining on anonymized data and save results
     fuzzy_data = fuzzy_mining_func(anonymized_fuzzy_dataset_path)
-
-    # save the fuzzy mining results table
     fuzzy_data.to_csv("outputs/hidden_association_rules_anonymized.csv", index=False)
 
-    # execute frequent pattern mining
+    # Perform frequent pattern mining on anonymized data and save results
     frequent_itemsets = frequent_mining_func(anonymized_dataset_path)
-
-    # save the frequent pattern mining results table
     frequent_itemsets.to_csv("outputs/frequent_itemsets_anonymized.csv", index=False)
 
-    # execute frequent pattern mining with noise
+    # Perform frequent pattern mining with added noise on anonymized data and save results
     frequent_patterns_with_noise = frequent_pattern_mining_with_noise(
         anonymized_dataset_path, min_support=0.1, noise_level=0.1
     )
-
-    # save the noise mining results table
     frequent_patterns_with_noise.to_csv(
         "outputs/noise_itemsets_anonymized.csv", index=False
     )
-    # First comparison for association rules data mining:
+
+    # Comparison of results before and after anonymization
     print(
         "***************************\nAssociation Rules Data Mining Comparison Results\n***************************"
     )
@@ -119,7 +99,6 @@ def main():
         sensitive_attributes,
     )
 
-    # Second comparison for association rules with fuzzy logic data mining:
     print(
         "***************************\nFuzzy Logic Association Rules Data Mining Comparison Results\n***************************"
     )
@@ -130,7 +109,6 @@ def main():
         sensitive_attributes,
     )
 
-    # Third comparison for frequent itemsets:
     print(
         "***************************\nFrequent Itemsets Data Mining Comparison Results\n***************************"
     )
@@ -140,7 +118,6 @@ def main():
         sensitive_attributes,
     )
 
-    # Fourth comparison for frequent itemsets with added noise:
     print(
         "***************************\nFrequent Itemsets with Added Noise Data Mining Comparison Results\n***************************"
     )

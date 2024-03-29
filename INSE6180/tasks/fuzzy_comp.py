@@ -4,11 +4,11 @@ import pandas as pd
 def compare_fuzzy_mining_results(
     original_rules_file, anonymized_rules_file, sensitive_attributes
 ):
-    # Load the original and anonymized association rules
+    # Load association rules from both datasets
     original_rules = pd.read_csv(original_rules_file)
     anonymized_rules = pd.read_csv(anonymized_rules_file)
 
-    # Enhance Common Rules Calculation
+    # Identify common rules between the two datasets for a direct comparison
     common_rules = pd.merge(
         original_rules,
         anonymized_rules,
@@ -18,14 +18,14 @@ def compare_fuzzy_mining_results(
     )
     common_rule_count = len(common_rules)
 
-    # Revised calculations for the number of rules and reduction percentage
+    # Calculate the reduction in number of rules as a percentage
     original_rule_count = len(original_rules)
     anonymized_rule_count = len(anonymized_rules)
     reduction_percentage = (
         (original_rule_count - anonymized_rule_count) / original_rule_count
     ) * 100
 
-    # Enhanced Attribute Disclosure Risk Calculation
+    # Calculate the attribute disclosure risk by comparing the presence of sensitive attributes in rules
     original_sensitive_rules = original_rules[
         original_rules["antecedents"].str.contains(
             "|".join(sensitive_attributes), na=False
@@ -42,7 +42,7 @@ def compare_fuzzy_mining_results(
         else 0
     )
 
-    # Information Loss Calculation based on BIV
+    # Evaluate information loss by comparing the mean Best Information Value (BIV) before and after anonymization
     information_loss_original = original_rules["BIV"].mean()
     information_loss_anonymized = anonymized_rules["BIV"].mean()
     information_loss_percentage = (
@@ -55,7 +55,7 @@ def compare_fuzzy_mining_results(
         else 0
     )
 
-    # Revised percentage reduction in sensitive attributes calculation
+    # Determine the reduction in rules with sensitive attributes
     reduction_sensitive_attributes = (
         (
             (len(original_sensitive_rules) - len(anonymized_sensitive_rules))
@@ -80,6 +80,4 @@ def compare_fuzzy_mining_results(
     print("Utility of Data Mining Results:")
     print(f"Number of Association Rules in Original Data: {original_rule_count}")
     print(f"Number of Association Rules in Anonymized Data: {anonymized_rule_count}")
-    print(f"Number of Common Association Rules: {common_rule_count}")
-
-    print()
+    print(f"Number of Common Association Rules: {common_rule_count}\n")

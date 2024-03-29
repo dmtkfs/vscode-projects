@@ -8,17 +8,14 @@ def compare_noisy_mining_results(
     frequent_itemsets_anonymized_file,
     sensitive_attributes,
 ):
-    """
-    Performs a comprehensive analysis comparing frequent itemset mining results
-    between original and anonymized datasets, considering added noise.
-    """
-    # Load all datasets
+
+    # Load datasets containing itemsets for comparison
     original_noisy_itemsets_df = pd.read_csv(original_noisy_itemsets_file)
     anonymized_noisy_itemsets_df = pd.read_csv(anonymized_noisy_itemsets_file)
     frequent_itemsets_df = pd.read_csv(frequent_itemsets_file)
     frequent_itemsets_anonymized_df = pd.read_csv(frequent_itemsets_anonymized_file)
 
-    # Calculate potentially fake itemsets
+    # Identify the potentially fake itemsets created by noise addition
     original_fake_count = len(
         set(original_noisy_itemsets_df["itemsets"])
         - set(frequent_itemsets_df["itemsets"])
@@ -28,7 +25,7 @@ def compare_noisy_mining_results(
         - set(frequent_itemsets_anonymized_df["itemsets"])
     )
 
-    # Function to calculate disclosure risk
+    # Calculate the disclosure risk by finding sensitive attributes in itemsets
     def disclosure_risk(itemsets_df):
         sensitive_count = itemsets_df[
             itemsets_df["itemsets"].apply(
@@ -41,14 +38,14 @@ def compare_noisy_mining_results(
     original_disclosure_risk = disclosure_risk(frequent_itemsets_df)
     anonymized_disclosure_risk = disclosure_risk(frequent_itemsets_anonymized_df)
 
-    # Calculate information loss
+    # Calculate information loss as a percentage
     information_loss = (
         (1 - anonymized_disclosure_risk / original_disclosure_risk) * 100
         if original_disclosure_risk
         else 0
     )
 
-    # Calculate the number of common frequent itemsets
+    # Determine the overlap of frequent itemsets between original and anonymized datasets
     common_itemsets = set(original_noisy_itemsets_df["itemsets"]).intersection(
         anonymized_noisy_itemsets_df["itemsets"]
     )
@@ -89,6 +86,4 @@ def compare_noisy_mining_results(
     print(
         f"Number of Frequent Itemsets Generated (Anonymized): {len(anonymized_noisy_itemsets_df)}"
     )
-    print(f"Number of Common Frequent Itemsets: {common_itemset_count}")
-
-    print()
+    print(f"Number of Common Frequent Itemsets: {common_itemset_count}\n")
