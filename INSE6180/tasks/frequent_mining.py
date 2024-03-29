@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from mlxtend.frequent_patterns import apriori
-from sklearn.preprocessing import LabelEncoder
 
 
 def frequent_mining_func(dataset_path, min_support=0.1):
