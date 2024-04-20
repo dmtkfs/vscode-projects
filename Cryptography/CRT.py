@@ -1,4 +1,4 @@
-from tools.cuberoot import croot
+from tools.math_assist import croot
 
 congruences = 0
 variableindex = []
