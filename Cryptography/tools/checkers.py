@@ -15,5 +15,7 @@ def check_valid_key_length(keylength):
     return keylength == 128 or keylength == 192 or keylength == 256
 
 
-def check_binary_array(array, length=8):
-    return all(b in "01" for b in array) and len(array) == length
+def check_binary_array(array, length):
+    if len(array) != length:
+        return False
+    return all(str(b) in "01" for b in array)

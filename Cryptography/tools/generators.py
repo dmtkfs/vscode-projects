@@ -1,44 +1,35 @@
 import secrets
-from tools.modify import rotate_list_left as rotateleft
-from tools.modify import xor_bitlists as xor
-from tools.modify import bits_to_bytes as tobytes
+from tools.modify import rotate_list_left
+from tools.modify import xor_bitlists
+from tools.modify import bits_to_bytes
 
 
 def primary_key_generator(keylength):
-    firstpass = []
-    secondpass = []
-    randomizedkey = []
-
-    for i in range(keylength):
-        firstpass.append(secrets.randbits(1))
-        secondpass.append(secrets.randbits(1))
-        randomizedkey.append(firstpass[i] ^ secondpass[i])
-    return randomizedkey
+    return [secrets.randbits(1) for _ in range(keylength)]
 
 
-def roundkey_generator(mainkey, rounds):
+def sbox_generator():
+    values = list(range(256))
+    sbox = []
+    while values:
+        i = secrets.randbelow(len(values))
+        sbox.append(values.pop(i))
+    return sbox
 
-    def sbox_generator():
-        values = list(range(256))
-        sbox = []
-        while values:
-            i = secrets.randbelow(len(values))
-            sbox.append(values.pop(i))
-        return sbox
 
-    def use_sbox(bytes, sbox):
-        return [sbox[byte] for byte in bytes]
+def use_sbox(byte_array, sbox):
+    return [sbox[byte] for byte in byte_array]
 
-    sbox = sbox_generator()
+
+def roundkey_generator(mainkey, rounds, sbox):
     roundkeys = []
-    key_len = len(mainkey)
-
-    for i in range(rounds):
-        randombits = [secrets.randbits(1) for _ in range(key_len)]
-        newkey = xor(mainkey, randombits)
-        rotated_key = rotateleft(newkey, i)
-        rotated_key = tobytes(rotated_key)
-        transformed_key = use_sbox(rotated_key, sbox)
-        roundkeys.append(transformed_key)
-
+    for _ in range(rounds):
+        randombits = [secrets.randbits(1) for _ in range(len(mainkey))]
+        newkey = [a ^ b for a, b in zip(mainkey, randombits)]
+        newkey_bytes = bits_to_bytes(newkey)
+        transformed_bytes = use_sbox(newkey_bytes, sbox)
+        transformed_bits = [
+            int(bit) for byte in transformed_bytes for bit in format(byte, "08b")
+        ]
+        roundkeys.append(transformed_bits[: len(mainkey)])
     return roundkeys
