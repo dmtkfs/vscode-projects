@@ -3,9 +3,9 @@ def array_split(inputarray):
     return inputarray[:mid], inputarray[mid:]
 
 
-def rotate_list_left(bit_list, shift):
-    shift %= len(bit_list)
-    return bit_list[shift:] + bit_list[:shift]
+def rotate_list_bytes(byte_list, shift):
+    shift %= len(byte_list)
+    return byte_list[shift:] + byte_list[:shift]
 
 
 def xor_bitlists(list1, list2):
