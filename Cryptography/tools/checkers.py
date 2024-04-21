@@ -1,4 +1,4 @@
-def isprime(n):
+def check_isprime(n):
     if n <= 1:
         return 0
     if n == 2:
@@ -9,3 +9,11 @@ def isprime(n):
         if n % i == 0:
             return 0
     return 1
+
+
+def check_valid_key_length(keylength):
+    return keylength == 128 or keylength == 192 or keylength == 256
+
+
+def check_binary_array(array, length=8):
+    return all(b in "01" for b in array) and len(array) == length

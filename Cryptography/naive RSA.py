@@ -1,5 +1,5 @@
 import math
-from tools.checkers import isprime as isprime
+from tools.checkers import check_isprime as isprime
 
 c = int(input("Give c (the ciphertext). Give 0 if not applicable: "))
 m = int(input("Give m (the plaintext). Give 0 if not applicable: "))
