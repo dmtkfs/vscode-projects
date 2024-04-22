@@ -25,11 +25,11 @@ def generate_e_for_rsa(phin):
     return e
 
 
-def primary_key_generator(keylength):
+def generate_primary_key(keylength):
     return [secrets.randbits(1) for _ in range(keylength)]
 
 
-def sbox_generator():
+def generate_sbox():
     values = list(range(256))
     sbox = []
     while values:
@@ -38,11 +38,7 @@ def sbox_generator():
     return sbox
 
 
-def use_sbox(byte_array, sbox):
-    return [sbox[byte] for byte in byte_array]
-
-
-def roundkey_generator(mainkey, rounds, sbox):
+def generate_roundkey(mainkey, rounds, sbox):
     roundkeys = []
     for i in range(rounds):
         randombits = [secrets.randbits(1) for _ in range(len(mainkey))]
@@ -55,3 +51,8 @@ def roundkey_generator(mainkey, rounds, sbox):
         ]
         roundkeys.append(transformed_bits[: len(mainkey)])
     return roundkeys
+
+
+def generate_polynomial_for_secret(secret, k, p):
+    coefficients = [secret] + [random.randint(0, p - 1) for _ in range(k - 1)]
+    return coefficients
