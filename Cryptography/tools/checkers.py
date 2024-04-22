@@ -19,3 +19,8 @@ def check_binary_array(array, length):
     if len(array) != length:
         return False
     return all(str(b) in "01" for b in array)
+
+
+def check_if_3mod4(n):
+    three = n % 4
+    return three == 3

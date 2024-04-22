@@ -34,7 +34,5 @@ c = (message * pow(y, k, p)) % p
 ciphertext = [r, c]
 print(f"ciphertext: {ciphertext}")
 
-plaintext = (
-    c * pow(r, p - 1 - x, p)
-) % p  # Using Fermat's little theorem to find modular inverse
+plaintext = (c * pow(r, p - 1 - x, p)) % p
 print(f"plaintext: {plaintext}")
