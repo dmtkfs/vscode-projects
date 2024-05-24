@@ -286,7 +286,7 @@ def main():
 
     message = "xxx"
     name = "xxx"
-    mikaeils_message = (
+    partner_message = (
         552904839,
         202559165,
         832707405,
@@ -319,7 +319,7 @@ def main():
     print(f"My encrypted message is : {encrypted_message}\n")
     print(" Encryption Completed. Waiting...\n")
     time.sleep(10)
-    decrypted_message = encr_decr(my_N, d, mikaeils_message)
+    decrypted_message = encr_decr(my_N, d, partner_message)
     print(f"The decrypted partner message is : {decrypted_message}\n")
     plaintext = plain_text(decrypted_message)
     print(f"The original partner message is : {plaintext}\n")
