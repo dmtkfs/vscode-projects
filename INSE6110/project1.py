@@ -284,8 +284,8 @@ def overall_verification(name, verify):
 
 def main():
 
-    message = "Hello Mikaeil!!"
-    name = "Dimitrios Kafritsas"
+    message = "xxx"
+    name = "xxx"
     mikaeils_message = (
         552904839,
         202559165,
@@ -304,7 +304,7 @@ def main():
         42096706,
         1071285895,
     )
-    partner_name = "Mikaeil Mayeli Feridani"
+    partner_name = "xxx"
     cut_message = cut_to_chunks(message)
     hex_chunks = hex_convert(cut_message)
     int_chunks = int_convert(hex_chunks)
