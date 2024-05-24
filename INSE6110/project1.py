@@ -134,7 +134,7 @@ my_e = 1538624097
 # private key
 d = 461365665
 
-# Mikaeil Mayeli Feridani
+# partner
 N = 2496728609
 e = 2423414819
 
