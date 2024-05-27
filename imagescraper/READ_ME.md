@@ -1,7 +1,3 @@
-Certainly! Here’s a comprehensive summary for a README file, detailing the functionality and operation of your script. This README can be used as a guide for users to understand how to set up and use the script effectively.
-
----
-
 ## Image Scraper Tool
 
 This Python-based tool automates the process of downloading images from websites using Selenium and Requests libraries. It is designed to handle both simple and complex scenarios including dynamic content loading, session management, and handling rate limits with retries.
@@ -55,7 +51,3 @@ This Python-based tool automates the process of downloading images from websites
 
 ### Note
 This tool is intended for educational and legitimate usage only. Users should ensure they have permission to scrape images from any website and respect robots.txt and terms of service.
-
----
-
-This README provides a complete guide to setting up and running the image scraper script, outlining both its capabilities and its limitations. Adjust the contents to better fit the specifics of your implementation or any additional features you might add.
