@@ -9,7 +9,7 @@ def ssl_tls_checker(host, port=443):
     try:
         # Connect to host
         conn = context.wrap_socket(socket.socket(socket.AF_INET), server_hostname=host)
-        conn.settimeout(10.0)  # Timeout for connection
+        conn.settimeout(10.0)
         conn.connect((host, port))
         ssl_info = conn.getpeercert()
     except Exception as e:
@@ -22,11 +22,10 @@ def ssl_tls_checker(host, port=443):
     expiration_date = datetime.strptime(ssl_info["notAfter"], "%b %d %H:%M:%S %Y GMT")
     days_remaining = (expiration_date - datetime.now()).days
 
-    # Format issuer and subject for better readability
+    # Format issuer and subject
     issuer = {item[0][0]: item[0][1] for item in ssl_info["issuer"]}
     subject = {item[0][0]: item[0][1] for item in ssl_info["subject"]}
 
-    # Prepare result
     result = {
         "Host": host,
         "Valid Until": expiration_date.strftime("%Y-%m-%d"),
@@ -49,7 +48,6 @@ def print_ssl_info(info):
         print(info)
         return
 
-    # Print in tabular format
     print("\nSSL/TLS Certificate Details:")
     print("-" * 40)
     for key, value in info.items():
