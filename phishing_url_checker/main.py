@@ -6,7 +6,7 @@ def phishing_url_check(url):
         r"[-_][a-zA-Z0-9]{1,}@?",  # Domain impersonation
         r"\d{1,3}-\d{1,3}-\d{1,3}-\d{1,3}",  # IP in the domain part
         r"(login|verify|account|secure|update|auth)\.",  # Common phishing words
-        r"(\.com-|\.net-|\.org-|\.ru-|\.info-|\.co\.uk-)",  # Dash after top-level domain
+        r"(\.com-|\.net-|\.org-|\.ca-|\.ru-|\.info-|\.co\.uk-)",  # Continuing after top-level domain
         r"([a-zA-Z0-9-]+\.)+\d{1,3}",  # Domain name ending in numbers
         r"https?://[a-zA-Z0-9-.]+[a-zA-Z0-9-]{60,}",  # Long domain names
     ]
