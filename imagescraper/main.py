@@ -92,7 +92,7 @@ def download_image(url, file_path):
 
 if __name__ == "__main__":
     url = input("Give the webpage url: ")
-    download_path = os.path.expanduser("~/Desktop/downloaded_images")
+    download_path = os.path.expanduser("downloaded_images")
 
     login_required = input("Do you want to login? (y/n) ")
     driver = webdriver.Firefox()  # Initialize the driver
