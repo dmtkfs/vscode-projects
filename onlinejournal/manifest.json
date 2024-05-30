@@ -1,0 +1,41 @@
+{
+    "manifest_version": 2,
+    "name": "Page Archiver",
+    "version": "1.0",
+    "permissions": [
+        "tabs",
+        "storage",
+        "downloads",
+        "<all_urls>",
+        "nativeMessaging"
+    ],
+    "background": {
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle",
+            "all_frames": false,
+            "match_about_blank": false
+        }
+    ],
+    "web_accessible_resources": [
+        "blacklist.json"
+    ],
+    "browser_action": {
+        "default_title": "Page Archiver",
+        "default_icon": "icon.png"
+    },
+    "icons": {
+        "48": "icon.png",
+        "96": "icon.png"
+    }
+}
