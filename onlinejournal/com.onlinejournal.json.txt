@@ -1,0 +1,9 @@
+{
+    "name": "com.onlinejournal",
+    "description": "Native messaging host for the Online Journal extension",
+    "path": "C:\\Users\\ssdd\\Documents\\concordia study\\Winter 2024 (1st semester)\\vscode projects\\onlinejournal\\onlinejournal.py",
+    "type": "stdio",
+    "allowed_extensions": [
+        "online_journal@example.com"
+    ]
+}
