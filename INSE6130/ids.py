@@ -169,7 +169,7 @@ def monitor_ssh_attempts():
         return
 
     failed_attempts = {}
-    MAX_ATTEMPTS = 5  # Threshold for brute-force detection
+    MAX_ATTEMPTS = 3  # Threshold for brute-force detection
 
     try:
         with Popen(
