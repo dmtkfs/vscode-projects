@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  ids:
+    build: .
+    container_name: secure_container
+    restart: unless-stopped
+    volumes:
+      - /var/log:/host_var_log:ro
