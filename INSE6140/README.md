@@ -28,7 +28,7 @@ In this cybersecurity assessment, we conducted a detailed analysis to identify, 
 A combination of popular security analysis tools and methodologies was applied, including (but not limited to):
 
 - **Static Analysis**: PHPStan, SonarQube  
-- **Dynamic Testing & Exploitation**: Burp Suite, sqlmap, curl  
+- **Dynamic Testing & Exploitation**: Burp Suite, ZAP, sqlmap, curl  
 - **Enumeration Tools**: Gobuster (directory enumeration)
 
 A detailed testing methodology was followed, progressively escalating tests from basic enumeration to confirmed exploit attempts, providing clear evidence of vulnerabilities.
